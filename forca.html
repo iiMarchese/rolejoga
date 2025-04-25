@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Forca</title>
+  <style>
+    body {
+      background-color: #0a1f44;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #1c3b7a;
+      margin: 5px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+    }
+
+    .btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Forca</h1>
+  <ul id="Forca-list"></ul>
+  <button class="btn" onclick="window.location.href='index.html'">Voltar ao Menu</button>
+
+  <script>
+    const db = firebase.firestore();
+
+    async function getForca() {
+      const querySnapshot = await db.collection('pontuacoes').get();
+      const ForcaList = document.getElementById('Forca-list');
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const listItem = document.createElement('li');
+        listItem.textContent = `${data.nome}: ${data.pontos} pontos`;
+        forcaList.appendChild(listItem);
+      });
+    }
+
+    getForca();
+  </script>
+
+</body>
+</html>

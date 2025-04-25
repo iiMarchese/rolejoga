@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolê Joga</title>
+  <link rel="icon" type="image/png" href="icone.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0a1f44; /* Cor de fundo sólida como fallback */
+      color: #f5f5f5;
+      position: relative; /* Para o pseudo-elemento */
+      min-height: 100vh; /* Garante que o fundo cubra a altura total */
+    }
+
+    /* Pseudo-elemento para o fundo desfocado */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('fundo.png'); /* Imagem de fundo */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(5px); /* Desfoque reduzido de 10px para 5px */
+      opacity: 0.1; /* Opacidade de 10% */
+      z-index: -1; /* Coloca o fundo atrás de todos os elementos */
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0a1f44;
+      padding: 15px 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .logo-title img {
+      width: 50px;
+      margin-right: 15px;
+      filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Menu Hamburguer */
+    .menu-container {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .menu-container:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.5));
+    }
+
+    .menu-icon {
+      font-size: 28px;
+      margin-right: 10px;
+      color: #4CAF50;
+      filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.3));
+    }
+
+    .menu-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f5f5f5;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-dropdown {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 250px;
+      background: #081633;
+      box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
+      border-right: 2px solid #4CAF50;
+      z-index: 999;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .menu-dropdown.show {
+      display: block;
+      transform: translateX(0);
+    }
+
+    .menu-dropdown .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #4CAF50;
+      font-size: 24px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .menu-dropdown .close-btn:hover {
+      color: #f5f5f5;
+    }
+
+    .menu-dropdown ul {
+      list-style: none;
+      padding: 20px;
+      margin: 80px 0 0 0;
+    }
+
+    .menu-dropdown ul li {
+      display: flex;
+      align-items: center;
+      padding: 15px 10px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #f5f5f5;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      border-radius: 8px;
+    }
+
+    .menu-dropdown ul li i {
+      margin-right: 10px;
+      color: #4CAF50;
+    }
+
+    .menu-dropdown ul li:hover {
+      background-color: #1a2b5c;
+      color: #fff;
+      transform: translateX(5px);
+    }
+
+    /* Perfil */
+    .profile-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .profile-container:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.5));
+    }
+
+    .profile-icon {
+      font-size: 28px;
+      color: #4CAF50;
+      filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.3));
+    }
+
+    .profile-card {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      min-width: 200px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .profile-card.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .profile-card p {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1a2b5c;
+    }
+
+    /* Conteúdo */
+    .content {
+      margin-top: 100px;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .content h2 {
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      color: #f5f5f5;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      justify-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .menu-button {
+      background: linear-gradient(45deg, #4CAF50, #45a049);
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, box-shadow 0.3s;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .menu-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .menu-button:active {
+      background: linear-gradient(45deg, #388e3c, #45a049);
+      transform: scale(1);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .logo-title img {
+        width: 40px;
+      }
+
+      .menu-dropdown {
+        width: 200px;
+      }
+
+      .menu-icon, .profile-icon {
+        font-size: 24px;
+      }
+
+      .menu-label {
+        font-size: 1rem;
+      }
+
+      .profile-card {
+        min-width: 150px;
+        right: 5px;
+        top: 50px;
+      }
+
+      .content {
+        padding: 30px 10px;
+      }
+
+      .content h2 {
+        font-size: 1.8rem;
+      }
+
+      .menu-button {
+        font-size: 1.2rem;
+        padding: 12px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="menu-container" onclick="toggleMenuDropdown()">
+      <i class="fas fa-bars menu-icon" aria-label="Abrir menu de navegação"></i>
+      <span class="menu-label">Menu Lista</span>
+    </div>
+    <div class="logo-title">
+      <img src="icone.png" alt="Rolê Joga Logo">
+      <h1>Rolê Joga</h1>
+    </div>
+    <div class="profile-container" onclick="toggleProfileCard()">
+      <i class="fas fa-user profile-icon" aria-label="Abrir perfil"></i>
+      <div class="profile-card" id="profileCard">
+        <p>Usuário Exemplo</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menu Dropdown (Hamburguer) -->
+  <div class="menu-dropdown" id="menuDropdown">
+    <button class="close-btn" onclick="toggleMenuDropdown()"><i class="fas fa-times"></i></button>
+    <ul>
+      <li onclick="startMemoryGame()"><i class="fas fa-brain"></i> Jogo da Memória</li>
+      <li onclick="startQuizGame()"><i class="fas fa-question-circle"></i> Quiz</li>
+      <li onclick="startCardGame()"><i class="fas fa-club"></i> Jogo de Cartas</li>
+      <li onclick="startHangmanGame()"><i class="fas fa-skull"></i> Jogo da Forca</li>
+      <li onclick="window.location.href='ranking.html'"><i class="fas fa-trophy"></i> Ver Ranking</li>
+    </ul>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div class="content">
+    <h2>Escolha o jogo que deseja jogar!</h2>
+    <div class="btn-container">
+      <button class="menu-button" onclick="startMemoryGame()">Jogo da Memória</button>
+      <button class="menu-button" onclick="startQuizGame()">Quiz</button>
+      <button class="menu-button" onclick="startCardGame()">Jogo de Cartas</button>
+      <button class="menu-button" onclick="startHangmanGame()">Jogo da Forca</button>
+    </div>
+  </div>
+
+  <script>
+    // Funções de navegação
+    function startMemoryGame() {
+      window.location.href = 'memoria.html';
+    }
+
+    function startQuizGame() {
+      window.location.href = 'quiz.html';
+    }
+
+    function startCardGame() {
+      window.location.href = 'card-game.html';
+    }
+
+    function startHangmanGame() {
+      window.location.href = 'forca.html';
+    }
+
+    // Toggle Menu Hamburguer
+    function toggleMenuDropdown() {
+      const dropdown = document.getElementById('menuDropdown');
+      dropdown.classList.toggle('show');
+    }
+
+    // Toggle Perfil Card
+    function toggleProfileCard() {
+      const card = document.getElementById('profileCard');
+      card.classList.toggle('show');
+    }
+
+    // Fechar dropdowns ao clicar fora
+    window.onclick = function(event) {
+      const menuDropdown = document.getElementById('menuDropdown');
+      const menuContainer = document.querySelector('.menu-container');
+      const profileCard = document.getElementById('profileCard');
+      const profileContainer = document.querySelector('.profile-container');
+
+      if (!menuContainer.contains(event.target) && !menuDropdown.contains(event.target)) {
+        menuDropdown.classList.remove('show');
+      }
+      if (!profileContainer.contains(event.target) && !profileCard.contains(event.target)) {
+        profileCard.classList.remove('show');
+      }
+    }
+  </script>
+</body>
+</html>
